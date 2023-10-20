@@ -1,0 +1,31 @@
+{
+    "equipment": {
+        "gotAll": "Successfully fetched equipments",
+        "gotOne": "Successfully fetched equipment",
+        "created": "Successfully created equipment",
+        "updated": "Successfully updated equipment",
+        "deleted": "Successfully deleted equipment",
+
+        "notFound": "Equipment not found"
+    },
+    "token": {
+        "created": "Successfully created token"
+    },
+    "defaults": {
+        "gotAll": "Successfully fetched",
+        "gotOne": "Successfully fetched",
+        "created": "Successfully created",
+        "updated": "Successfully updated",
+        "deleted": "Successfully deleted",
+        "auth": "Successfully authenticated",
+        "login": "Successfully logged in",
+        "logout": "Successfully logged out",
+
+        "wrongInput": "Invalid values provided",
+        "unAuth": "Unauthorized",
+        "notAllowed": "Action not allowed",
+        "noToken": "Invalid or expired token",
+
+        "serverError": "Internal Server Error"
+    }
+}
