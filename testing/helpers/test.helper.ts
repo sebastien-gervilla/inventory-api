@@ -2,7 +2,7 @@ import supertest, { SuperTest } from 'supertest';
 import { Express } from 'express';
 import MemoryDatabase from './database.helper';
 
-export default class Test {
+export default class ApiTest {
 
     private _request: SuperTest<supertest.Test>;
     private _database: MemoryDatabase;
@@ -11,29 +11,34 @@ export default class Test {
     public findOne: typeof this._database.findOne;
     private _insertOne: (() => Promise<void>) | null = null;
 
-    constructor(private _app: Express) {
+    constructor(private _app: Express, private _method: Method, private _baseRoute: string) {
         this._request = supertest(this._app);
         this._database = new MemoryDatabase();
         this.findById = this._database.findById;
         this.findOne = this._database.findOne;
     }
 
-    async route(method: Method, routePath: string, testFunction: (request: () => supertest.Test) => void) {
-        describe(`${method.toUpperCase()} '${routePath}'`, () => {
-            beforeAll(async () => {
-                await this._database.connect();
+    async create(testSuite: () => void) {
+        describe(`${this._method.toUpperCase()} '${this._baseRoute}'`, () => {
+            beforeAll(this._database.connect);
+
+            beforeEach(async () => {
                 if (this._insertOne)
                     await this._insertOne();
             });
 
-            // TODO: This means inserted data will only work for one test.
-            // Should this be after all ?
             afterEach(this._database.clear);
-            
+
             afterAll(this._database.close);
 
-            testFunction(
-                () => this._request[method](routePath)
+            testSuite();
+        });
+    }
+
+    async route(endpoints: string, description: string, testFunction: (request: () => supertest.Test) => Promise<void>) {
+        it(description, async () => {
+            await testFunction(
+                () => this._request[this._method](this._baseRoute + endpoints)
             );
         });
     }
