@@ -1,9 +1,10 @@
-import Test from '../../../../testing/helpers/test.helper';
+import ApiTest from '../../../../testing/helpers/test.helper';
 import { app } from '../../../server';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
 import { Types } from 'mongoose';
 
+const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
@@ -11,53 +12,57 @@ const equipment: Partial<EquipmentModel> = {
     max: 2
 }
 
-const test = new Test(app);
-test.insertOne('equipments', equipment);
+const apiTest = new ApiTest(app, 'put', '/equipment');
+apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
-test.route('put', '/equipment/' + equipmentId, (request) => {
-    it('Should successfully update equipment.', async () => {
-        const newName = 'Key';
-        const response: Response<EquipmentModel> = await request().send({
+apiTest.create(() => {
+
+    apiTest.route(`/${equipmentId}`, "Should successfully update equipment.", async (request) => {
+        const newEquipment = {
             ...equipment,
             name: 'Key'
-        });
-        const { data } = response.body;
+        };
 
-        expect(response.statusCode === 204).toBe(true);
-        expect(data._id === equipmentId).toBe(true);
-        expect(data).toBe(true);
+        const response: Response<EquipmentModel> = await request().send(newEquipment);
+        
+        const updatedEquipment = await apiTest.findById(COLLECTION, equipment._id);
+
+        expect(response.statusCode).toBe(204);
+        expect(updatedEquipment?.name).toBe(newEquipment.name);
     });
 
-    it('Should reject missing name.', async () => {
-        const response: Response<EquipmentModel> = await request().send({
-            usedBy: [],
-            max: 21
-        });
-        expect(response.statusCode === 400).toBe(true);
+    apiTest.route(`/invalid`, "Should throw an error for invalid id.", async (request) => {
+        const newEquipment = {
+            ...equipment,
+            name: 'newKey'
+        };
+
+        const response: Response<EquipmentModel> = await request().send(newEquipment);
+
+        expect(response.statusCode).toBe(404);
     });
 
-    it('Should accept missing usedBy (default value).', async () => {
-        const response: Response<EquipmentModel> = await request().send({
-            name: 'name',
-            max: 21
-        });
-        expect(response.statusCode === 201).toBe(true);
+    const randomId = new Types.ObjectId().toString();
+    apiTest.route(`/${randomId}`, "Should throw an error when equipment not found.", async (request) => {
+        const newEquipment = {
+            ...equipment,
+            name: 'newKey'
+        };
+
+        const response: Response<EquipmentModel> = await request().send(newEquipment);
+
+        expect(response.statusCode).toBe(404);
     });
 
-    it('Should accept missing max (default value).', async () => {
-        const response: Response<EquipmentModel> = await request().send({
-            name: 'name',
-            usedBy: []
-        });
-        expect(response.statusCode === 201).toBe(true);
-    });
+    apiTest.route(`/${equipmentId}`, "Should throw an error for incorrect values.", async (request) => {
+        const newEquipment = {
+            ...equipment,
+            max: -1
+        };
 
-    it('Should reject "max" below mininum.', async () => {
-        const response: Response<EquipmentModel> = await request().send({
-            name: 'name',
-            max: 0
-        });
-        expect(response.statusCode === 400).toBe(true);
+        const response: Response<EquipmentModel> = await request().send(newEquipment);
+
+        expect(response.statusCode).toBe(400);
     });
 });

@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import { Equipment, EquipmentModel } from '@/models/equipment.model';
 import { Controller } from '@/helpers';
 
@@ -6,8 +7,18 @@ const { updated, notFound } = messages.equipment;
 
 export const update = Controller.route<EquipmentModel>(async (request, response) => {
     const { id } = request.params;
-    if (!id) return response.send(404, notFound);
+    if (!isValidObjectId(id)) 
+        return response.send(404, notFound);
 
-    await Equipment.updateOne(request.body);
-    return response.send(201, updated);
+    const oldEquipment = await Equipment.findById(id);
+    if (!oldEquipment) return response.send(404, notFound);
+
+    const { name, usedBy, max } = request.body;
+    oldEquipment.name = name;
+    oldEquipment.usedBy = usedBy;
+    oldEquipment.max = max;
+
+    await oldEquipment.save();
+    
+    return response.send(204, updated);
 });
