@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import { Equipment, EquipmentModel } from '@/models/equipment.model';
 import { Controller } from '@/helpers';
 
@@ -6,7 +7,8 @@ const { notFound, gotOne } = messages.equipment;
 
 export const getById = Controller.route<EquipmentModel>(async (request, response) => {
     const { id } = request.params;
-    if (!id) return response.send(404, notFound);
+    if (!isValidObjectId(id)) 
+        return response.send(404, notFound);
 
     const equipment = await Equipment.findById(id);
     if (!equipment) return response.send(404, notFound);

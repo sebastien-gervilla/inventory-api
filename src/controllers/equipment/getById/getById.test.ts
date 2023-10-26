@@ -1,9 +1,10 @@
-import Test from '../../../../testing/helpers/test.helper';
+import ApiTest from '../../../../testing/helpers/test.helper';
 import { app } from '../../../server';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
 import { Types } from 'mongoose';
 
+const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
@@ -11,16 +12,28 @@ const equipment: Partial<EquipmentModel> = {
     max: 2
 }
 
-const test = new Test(app);
-test.insertOne('equipments', equipment);
+const apiTest = new ApiTest(app, 'get', '/equipment');
+apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
-test.route('get', '/equipment/' + equipmentId, (request) => {
-    it('Should find the inserted equipment.', async () => {
+apiTest.create(() => {
+
+    apiTest.route(`/${equipmentId}`, 'Should return the searched equipment.', async (request) => {
         const response: Response<EquipmentModel> = await request();
         const { data } = response.body;
         
-        expect(response.statusCode === 200).toBe(true);
-        expect(data._id === equipmentId).toBe(true);
+        expect(response.statusCode).toBe(200);
+        expect(data._id).toBe(equipmentId);
+    });
+
+    apiTest.route(`/invalid`, 'Should throw an error for incorrect id.', async (request) => {
+        const response: Response<EquipmentModel> = await request();
+        expect(response.statusCode).toBe(404);
+    });
+
+    const randomId = new Types.ObjectId().toString();
+    apiTest.route(`/${randomId}`, 'Should throw an error when equipment not found.', async (request) => {
+        const response: Response<EquipmentModel> = await request();
+        expect(response.statusCode).toBe(404);
     });
 });
