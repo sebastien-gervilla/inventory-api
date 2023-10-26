@@ -12,18 +12,19 @@ const equipment: Partial<EquipmentModel> = {
     max: 2
 }
 
-const apiTest = new ApiTest(app, 'get', '/equipment');
+const apiTest = new ApiTest(app, 'delete', '/equipment');
 apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
 apiTest.create(() => {
 
-    apiTest.route(`/${equipmentId}`, 'Should return the searched equipment.', async (request) => {
+    apiTest.route(`/${equipmentId}`, 'Should properly delete the equipment.', async (request) => {
         const response: Response<EquipmentModel> = await request();
-        const { data } = response.body;
+
+        const deletedEquipment = await apiTest.findById(COLLECTION, equipment._id);
         
-        expect(response.statusCode).toBe(200);
-        expect(data._id).toBe(equipmentId);
+        expect(response.statusCode).toBe(204);
+        expect(deletedEquipment).toBeNull();
     });
 
     apiTest.route(`/invalid`, 'Should throw an error for incorrect id.', async (request) => {

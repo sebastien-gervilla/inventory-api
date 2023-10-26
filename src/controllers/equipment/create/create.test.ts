@@ -1,45 +1,46 @@
-import Test from '../../../../testing/helpers/test.helper';
+import ApiTest from '../../../../testing/helpers/test.helper';
 import { app } from '../../../server';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
 
-const test = new Test(app);
+const apiTest = new ApiTest(app, 'post', '/equipment');
 
-test.route('post', '/equipment', (request) => {
-    it('Should successfully insert equipment.', async () => {
+apiTest.create(() => {
+
+    apiTest.route('/', 'Should successfully insert equipment.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({name: 'Cable'});
-        expect(response.statusCode === 201).toBe(true);
+        expect(response.statusCode).toBe(201);
     });
 
-    it('Should reject missing name.', async () => {
+    apiTest.route('/', 'Should reject missing name.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             usedBy: [],
             max: 21
         });
-        expect(response.statusCode === 400).toBe(true);
+        expect(response.statusCode).toBe(400);
     });
 
-    it('Should accept missing usedBy (default value).', async () => {
+    apiTest.route('/', 'Should accept missing usedBy (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
             max: 21
         });
-        expect(response.statusCode === 201).toBe(true);
+        expect(response.statusCode).toBe(201);
     });
 
-    it('Should accept missing max (default value).', async () => {
+    apiTest.route('/', 'Should accept missing max (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
             usedBy: []
         });
-        expect(response.statusCode === 201).toBe(true);
+        expect(response.statusCode).toBe(201);
     });
 
-    it('Should reject "max" below mininum.', async () => {
+    apiTest.route('/', 'Should reject "max" below mininum.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
             max: 0
         });
-        expect(response.statusCode === 400).toBe(true);
+        expect(response.statusCode).toBe(400);
     });
 });

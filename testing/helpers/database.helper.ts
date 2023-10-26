@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, mongo } from "mongoose";
+import mongoose, { Types, mongo } from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 export default class MemoryDatabase {
@@ -30,14 +30,14 @@ export default class MemoryDatabase {
 
     // Useful queries
 
-    findById = async (collectionName: string, id: ObjectId) => {
+    findById = async (collectionName: string, id: Types.ObjectId) => {
         const { collections } = mongoose.connection;
-        await collections[collectionName].findOne({ _id: id });
+        return await collections[collectionName].findOne({ _id: id });
     }
 
     findOne = async (collectionName: string, filters: Filters) => {
         const { collections } = mongoose.connection;
-        await collections[collectionName].findOne(filters);
+        return await collections[collectionName].findOne(filters);
     }
 
     insertOne = async (collectionName: string, document: {}) => {

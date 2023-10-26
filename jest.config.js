@@ -4,7 +4,6 @@ module.exports = {
     setupFiles: ['dotenv/config'],
     testMatch: ['**/*.test.ts'],
     modulePaths: ['<rootDir>/src'],
-    // collectCoverage: true,
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1'
     },

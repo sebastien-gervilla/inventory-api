@@ -3,9 +3,9 @@ import { Equipment, EquipmentModel } from '@/models/equipment.model';
 import { Controller } from '@/helpers';
 
 import messages from '@/docs/res.messages.json';
-const { notFound, gotOne } = messages.equipment;
+const { notFound, deleted } = messages.equipment;
 
-export const getById = Controller.route<EquipmentModel>(async (request, response) => {
+export const _delete = Controller.route<EquipmentModel>(async (request, response) => {
     const { id } = request.params;
     if (!isValidObjectId(id)) 
         return response.send(404, notFound);
@@ -13,5 +13,6 @@ export const getById = Controller.route<EquipmentModel>(async (request, response
     const equipment = await Equipment.findById(id);
     if (!equipment) return response.send(404, notFound);
 
-    return response.send(200, gotOne, equipment);
+    await equipment.deleteOne();
+    return response.send(204, deleted);
 });
