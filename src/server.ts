@@ -3,38 +3,46 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { nodeEnv } from './config/environment';
+import { getEnv } from './config/environment';
 import { initializeDatabaseConnection } from './config/database';
+import { Server } from './types/server.types';
 
 // Router imports
 import { EquipmentRouter } from './routes';
 
-// Application setup
-dotenv.config();
-const app = express();
-const port = process.env.PORT;
+export const initializeServer = async () => {
+    const { nodeEnv, port } = getEnv();
 
-// Database Connection
-initializeDatabaseConnection();
+    // Application setup
+    dotenv.config();
+    const app = express();
 
-// Middlewares
-app.use(bodyParser.json());
-app.use(cors({
-    origin: [
-        "http://localhost:3000",
-        "http://vps-cdfcffd0.vps.ovh.net"
-    ],
-    credentials: true
-}));
+    // Database Connection
+    await initializeDatabaseConnection();
 
-// Routes
-app.use('/equipment', EquipmentRouter);
+    // Middlewares
+    app.use(bodyParser.json());
+    app.use(cors({
+        origin: [
+            "http://localhost:3000",
+            "http://vps-cdfcffd0.vps.ovh.net"
+        ],
+        credentials: true
+    }));
 
-// Running server
-if (nodeEnv !== 'test')
-    app.listen(port, () => {
-        console.log("========================================================");
-        console.log(`\x1b[33m⚡️ Server is running at http://localhost:${port}\x1b[0m`);
-    });
+    // Routes
+    app.use('/equipment', EquipmentRouter);
 
-export { app };
+    // Running server
+    let server: Server | null = null;
+    if (nodeEnv !== 'test')
+        server = app.listen(port, () => {
+            console.log("========================================================");
+            console.log(`\x1b[33m⚡️ Server is running at http://localhost:${port}\x1b[0m`);
+        });
+
+    return {
+        app,
+        server
+    }
+}
