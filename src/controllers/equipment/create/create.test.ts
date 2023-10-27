@@ -1,9 +1,8 @@
 import ApiTest from '../../../../testing/helpers/test.helper';
-import { app } from '../../../server';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
 
-const apiTest = new ApiTest(app, 'post', '/equipment');
+const apiTest = new ApiTest('post', '/equipment');
 
 apiTest.create(() => {
 

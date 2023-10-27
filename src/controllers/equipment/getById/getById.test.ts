@@ -1,5 +1,4 @@
 import ApiTest from '../../../../testing/helpers/test.helper';
-import { app } from '../../../server';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
 import { Types } from 'mongoose';
@@ -12,7 +11,7 @@ const equipment: Partial<EquipmentModel> = {
     max: 2
 }
 
-const apiTest = new ApiTest(app, 'get', '/equipment');
+const apiTest = new ApiTest('get', '/equipment');
 apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
