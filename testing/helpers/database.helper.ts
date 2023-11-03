@@ -30,9 +30,9 @@ export default class MemoryDatabase {
 
     // Useful queries
 
-    findById = async (collectionName: string, id: Types.ObjectId) => {
+    findById = async <T>(collectionName: string, id: Types.ObjectId) => {
         const { collections } = mongoose.connection;
-        return await collections[collectionName].findOne({ _id: id });
+        return await collections[collectionName].findOne<T>({ _id: id });
     }
 
     findOne = async (collectionName: string, filters: Filters) => {
