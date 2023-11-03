@@ -7,7 +7,7 @@ const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
-    usedBy: ['Sebastus 1er', 'Paysan'],
+    borrowedBy: ['Sebastus 1er', 'Paysan'],
     max: 2
 }
 

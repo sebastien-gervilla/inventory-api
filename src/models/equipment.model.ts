@@ -2,7 +2,7 @@ import Mongoose from 'mongoose';
 
 export interface EquipmentModel extends Mongoose.Document {
     name: string,
-    usedBy: string[],
+    borrowedBy: string[],
     max: number
 }
 
@@ -14,7 +14,7 @@ const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
         unique: true,
         trim: true
     },
-    usedBy: {
+    borrowedBy: {
         type: [String],
         required: true,
         default: []

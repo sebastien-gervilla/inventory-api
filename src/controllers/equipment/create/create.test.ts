@@ -13,13 +13,13 @@ apiTest.create(() => {
 
     apiTest.route('/', 'Should reject missing name.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
-            usedBy: [],
+            borrowedBy: [],
             max: 21
         });
         expect(response.statusCode).toBe(400);
     });
 
-    apiTest.route('/', 'Should accept missing usedBy (default value).', async (request) => {
+    apiTest.route('/', 'Should accept missing borrowedBy (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
             max: 21
@@ -30,7 +30,7 @@ apiTest.create(() => {
     apiTest.route('/', 'Should accept missing max (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
-            usedBy: []
+            borrowedBy: []
         });
         expect(response.statusCode).toBe(201);
     });

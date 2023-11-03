@@ -3,9 +3,9 @@ import { Equipment, EquipmentModel } from '@/models/equipment.model';
 import { Controller } from '@/helpers';
 
 import messages from '@/docs/res.messages.json';
-const { updated, notFound } = messages.equipment;
+const { borrowed, notFound } = messages.equipment;
 
-export const update = Controller.route<EquipmentModel>(async (request, response) => {
+export const borrow = Controller.route<EquipmentModel>(async (request, response) => {
     const { id } = request.params;
     if (!isValidObjectId(id)) 
         return response.send(404, notFound);
@@ -13,12 +13,10 @@ export const update = Controller.route<EquipmentModel>(async (request, response)
     const oldEquipment = await Equipment.findById(id);
     if (!oldEquipment) return response.send(404, notFound);
 
-    const { name, borrowedBy, max } = request.body;
-    oldEquipment.name = name;
-    oldEquipment.borrowedBy = borrowedBy;
-    oldEquipment.max = max;
+    const { borrowingUser } = request.body;
+    oldEquipment.borrowedBy = [...oldEquipment.borrowedBy, borrowingUser];
 
     await oldEquipment.save();
     
-    return response.send(204, updated);
+    return response.send(204, borrowed);
 });

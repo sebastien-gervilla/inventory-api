@@ -7,7 +7,7 @@ const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
-    usedBy: ['Sebastus 1er', 'Paysan'],
+    borrowedBy: ['Sebastus 1er', 'Paysan'],
     max: 2
 }
 
@@ -25,7 +25,7 @@ apiTest.create(() => {
 
         const response: Response<EquipmentModel> = await request().send(newEquipment);
         
-        const updatedEquipment = await apiTest.findById(COLLECTION, equipment._id);
+        const updatedEquipment = await apiTest.findById<EquipmentModel>(COLLECTION, equipment._id);
 
         expect(response.statusCode).toBe(204);
         expect(updatedEquipment?.name).toBe(newEquipment.name);
