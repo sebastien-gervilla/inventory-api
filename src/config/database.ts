@@ -11,7 +11,7 @@ export const initializeDatabaseConnection = async () => {
 
         Mongoose.set('strictQuery', true);
         await Mongoose.connect(databaseUri);
-        console.log("🍃 Database successfully connected\n");
+        console.log("🍃 Database successfully connected");
     } catch (error) {
         console.log("Database connection error.\n" + error);
     }

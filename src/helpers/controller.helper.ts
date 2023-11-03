@@ -1,7 +1,7 @@
 import { MongooseError, Error } from "mongoose";
 import { Request } from "express";
 import Response from "./response.helper";
-import { Route, RouteReturn } from "types/controller.types";
+import { Route, RouteReturn } from "@/types/controller.types";
 
 import messages from '../docs/res.messages.json';
 

@@ -1,6 +1,8 @@
+// Config
+import './config/aliases';
+
 // Default imports
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { getEnv } from './config/environment';
@@ -11,14 +13,14 @@ import { Server } from './types/server.types';
 import { EquipmentRouter } from './routes';
 
 export const initializeServer = async () => {
+    console.log("===================================================");
     const { nodeEnv, port } = getEnv();
-
-    // Application setup
-    dotenv.config();
-    const app = express();
 
     // Database Connection
     await initializeDatabaseConnection();
+
+    // Server setup
+    const app = express();
 
     // Middlewares
     app.use(bodyParser.json());
@@ -37,7 +39,6 @@ export const initializeServer = async () => {
     let server: Server | null = null;
     if (nodeEnv !== 'test')
         server = app.listen(port, () => {
-            console.log("========================================================");
             console.log(`\x1b[33m⚡️ Server is running at http://localhost:${port}\x1b[0m`);
         });
 
@@ -46,3 +47,5 @@ export const initializeServer = async () => {
         server
     }
 }
+
+initializeServer()
