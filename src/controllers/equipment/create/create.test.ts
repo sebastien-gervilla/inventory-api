@@ -14,7 +14,7 @@ apiTest.create(() => {
     apiTest.route('/', 'Should reject missing name.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             usedBy: [],
-            max: 21
+            amount: 21
         });
         expect(response.statusCode).toBe(400);
     });
@@ -22,12 +22,12 @@ apiTest.create(() => {
     apiTest.route('/', 'Should accept missing usedBy (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
-            max: 21
+            amount: 21
         });
         expect(response.statusCode).toBe(201);
     });
 
-    apiTest.route('/', 'Should accept missing max (default value).', async (request) => {
+    apiTest.route('/', 'Should accept missing amount (default value).', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
             usedBy: []
@@ -35,10 +35,10 @@ apiTest.create(() => {
         expect(response.statusCode).toBe(201);
     });
 
-    apiTest.route('/', 'Should reject "max" below mininum.', async (request) => {
+    apiTest.route('/', 'Should reject "amount" below mininum.', async (request) => {
         const response: Response<EquipmentModel> = await request().send({
             name: 'name',
-            max: 0
+            amount: 0
         });
         expect(response.statusCode).toBe(400);
     });

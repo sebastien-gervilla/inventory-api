@@ -3,7 +3,7 @@ import Mongoose from 'mongoose';
 export interface EquipmentModel extends Mongoose.Document {
     name: string,
     usedBy: string[],
-    max: number
+    amount: number
 }
 
 const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
@@ -19,7 +19,7 @@ const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
         required: true,
         default: []
     },
-    max: {
+    amount: {
         type: Number,
         required: true,
         default: 1,
