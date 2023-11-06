@@ -8,7 +8,7 @@ const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
     borrowedBy: ['Sebastus 1er', 'Paysan'],
-    max: 2
+    amount: 2
 }
 
 const apiTest = new ApiTest('put', '/equipment');
@@ -57,7 +57,7 @@ apiTest.create(() => {
     apiTest.route(`/${equipmentId}`, "Should throw an error for incorrect values.", async (request) => {
         const newEquipment = {
             ...equipment,
-            max: -1
+            amount: -1
         };
 
         const response: Response<EquipmentModel> = await request().send(newEquipment);

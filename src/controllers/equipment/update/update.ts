@@ -13,10 +13,10 @@ export const update = Controller.route<EquipmentModel>(async (request, response)
     const oldEquipment = await Equipment.findById(id);
     if (!oldEquipment) return response.send(404, notFound);
 
-    const { name, borrowedBy, max } = request.body;
+    const { name, borrowedBy, amount } = request.body;
     oldEquipment.name = name;
     oldEquipment.borrowedBy = borrowedBy;
-    oldEquipment.max = max;
+    oldEquipment.amount = amount;
 
     await oldEquipment.save();
     

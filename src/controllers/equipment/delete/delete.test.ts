@@ -8,7 +8,7 @@ const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
     borrowedBy: ['Sebastus 1er', 'Paysan'],
-    max: 2
+    amount: 2
 }
 
 const apiTest = new ApiTest('delete', '/equipment');
