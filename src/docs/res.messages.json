@@ -6,6 +6,7 @@
         "updated": "Successfully updated equipment",
         "deleted": "Successfully deleted equipment",
         "borrowed": "Successfully borrowed equipment",
+        "unborrowed": "Successfully unborrowed equipment",
 
         "notFound": "Equipment not found"
     },
