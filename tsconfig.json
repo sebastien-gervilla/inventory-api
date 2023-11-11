@@ -1,5 +1,5 @@
 {
-  "include": ["./src"],
+  "include": ["./src", "environment.d.ts"],
   "exclude": [
     "node_modules", 
     "dist",
@@ -7,7 +7,7 @@
     "**/*.test.tsx"
   ],
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./dist",
 
@@ -31,7 +31,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "compileOnSave": false
