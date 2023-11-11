@@ -12,7 +12,7 @@ const equipment: Partial<EquipmentModel> = {
 }
 
 const apiTest = new ApiTest('put', '/equipment');
-apiTest.insertOne(COLLECTION, equipment);
+apiTest.beforeEach = () => apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
 apiTest.create(() => {
