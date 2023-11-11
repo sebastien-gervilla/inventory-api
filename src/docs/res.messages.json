@@ -5,6 +5,8 @@
         "created": "Successfully created equipment",
         "updated": "Successfully updated equipment",
         "deleted": "Successfully deleted equipment",
+        "amountExceeded": "Can't borrow more than in stock",
+        "duplicateBorrower": "User already borrowed this equipment",
         "borrowed": "Successfully borrowed equipment",
         "unborrowed": "Successfully unborrowed equipment",
 
