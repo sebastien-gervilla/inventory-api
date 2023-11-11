@@ -11,12 +11,17 @@ export default class ApiTest {
 
     public findById: typeof this._database.findById;
     public findOne: typeof this._database.findOne;
-    private _insertOne: (() => Promise<void>) | null = null;
+    public insertOne: typeof this._database.insertOne;
+    public updateById: typeof this._database.updateById;
+
+    public beforeEach: (() => Promise<void>) | null = null;
 
     constructor(private _method: Method, private _baseRoute: string) {
         this._database = new MemoryDatabase();
         this.findById = this._database.findById;
         this.findOne = this._database.findOne;
+        this.insertOne = this._database.insertOne;
+        this.updateById = this._database.updateById;
     }
 
     async create(testSuite: () => void) {
@@ -28,8 +33,8 @@ export default class ApiTest {
             });
 
             beforeEach(async () => {
-                if (this._insertOne)
-                    await this._insertOne();
+                if (this.beforeEach)
+                    await this.beforeEach();
             });
 
             afterEach(this._database.clear);
@@ -69,11 +74,6 @@ export default class ApiTest {
             server?.close();
         })
     }
-    
-    insertOne(collection: string, document: {}) {
-        this._insertOne = () => this._database.insertOne(collection, document);
-    }
-    
 }
 
 type Method = 'get' | 'post' | 'put' | 'delete';

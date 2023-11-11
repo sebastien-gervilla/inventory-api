@@ -7,12 +7,12 @@ const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
-    usedBy: ['Sebastus 1er', 'Paysan'],
+    borrowedBy: ['Sebastus 1er', 'Paysan'],
     amount: 2
 }
 
 const apiTest = new ApiTest('get', '/equipment');
-apiTest.insertOne(COLLECTION, equipment);
+apiTest.beforeEach = () => apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
 apiTest.create(() => {

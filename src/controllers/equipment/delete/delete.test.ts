@@ -7,12 +7,12 @@ const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
-    usedBy: ['Sebastus 1er', 'Paysan'],
+    borrowedBy: ['Sebastus 1er', 'Paysan'],
     amount: 2
 }
 
 const apiTest = new ApiTest('delete', '/equipment');
-apiTest.insertOne(COLLECTION, equipment);
+apiTest.beforeEach = () => apiTest.insertOne(COLLECTION, equipment);
 
 const equipmentId = equipment._id.toString();
 apiTest.create(() => {
@@ -20,7 +20,7 @@ apiTest.create(() => {
     apiTest.route(`/${equipmentId}`, 'Should properly delete the equipment.', async (request) => {
         const response: Response<EquipmentModel> = await request();
 
-        const deletedEquipment = await apiTest.findById(COLLECTION, equipment._id);
+        const deletedEquipment = await apiTest.findById<EquipmentModel>(COLLECTION, equipment._id);
         
         expect(response.statusCode).toBe(204);
         expect(deletedEquipment).toBeNull();

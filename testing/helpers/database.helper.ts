@@ -28,7 +28,7 @@ export default class MemoryDatabase {
         await (await this._server).stop();
     }
 
-    // Useful queries
+    // Queries
 
     findById = async <T>(collectionName: string, id: Types.ObjectId) => {
         const { collections } = mongoose.connection;
@@ -43,6 +43,11 @@ export default class MemoryDatabase {
     insertOne = async (collectionName: string, document: {}) => {
         const { collections } = mongoose.connection;
         await collections[collectionName].insertOne(document);
+    }
+
+    updateById = async (collectionName: string, document: {[key: string]: any} & { _id: Types.ObjectId }) => {
+        const { collections } = mongoose.connection;
+        await collections[collectionName].updateOne({ _id: document._id }, { $set: document });
     }
 }
 
