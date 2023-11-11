@@ -15,10 +15,7 @@ const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
         trim: true
     },
     borrowedBy: {
-        type: [{
-            type: String,
-            unique: true
-        }],
+        type: [String],
         required: true,
         default: []
     },
