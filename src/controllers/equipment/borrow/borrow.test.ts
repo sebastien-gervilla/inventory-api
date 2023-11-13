@@ -1,13 +1,20 @@
 import ApiTest from '../../../../testing/helpers/test.helper';
 import { Response } from '../../../types/response.types';
 import { EquipmentModel } from '../../../models/equipment.model';
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
+import { createTransport } from 'nodemailer';
+
+const sendMailMock = jest.fn();
+jest.mock("nodemailer");
+
+// @ts-ignore
+createTransport.mockReturnValue({ 'sendMail': sendMailMock });
 
 const COLLECTION = 'equipments';
 const equipment: Partial<EquipmentModel> = {
     _id: new Types.ObjectId(),
     name: 'Cable',
-    borrowedBy: ['Seb'],
+    borrowedBy: ['test@gmail.com'],
     amount: 2
 }
 
@@ -18,7 +25,7 @@ const equipmentId = equipment._id.toString();
 apiTest.create(() => {
 
     apiTest.route(`/${equipmentId}/borrow`, "Should successfully borrow equipment.", async (request) => {
-        const borrower = 'Fred';
+        const borrower = 'borrower@gmail.com';
         const response: Response<EquipmentModel> = await request().send({ borrower });
         
         const updatedEquipment = await apiTest.findById<EquipmentModel>(COLLECTION, equipment._id);
@@ -28,7 +35,7 @@ apiTest.create(() => {
     });
 
     apiTest.route(`/invalid/borrow`, "Should throw an error for invalid id.", async (request) => {
-        const borrower = 'Fred';
+        const borrower = 'borrower@gmail.com';
         const response: Response<EquipmentModel> = await request().send({ borrower });
 
         expect(response.statusCode).toBe(404);
@@ -36,7 +43,7 @@ apiTest.create(() => {
 
     const randomId = new Types.ObjectId().toString();
     apiTest.route(`/${randomId}/borrow`, "Should throw an error when equipment not found.", async (request) => {
-        const borrower = 'Fred';
+        const borrower = 'borrower@gmail.com';
         const response: Response<EquipmentModel> = await request().send({ borrower });
 
         expect(response.statusCode).toBe(404);
@@ -49,8 +56,15 @@ apiTest.create(() => {
         expect(response.statusCode).toBe(400);
     });
 
+    apiTest.route(`/${equipmentId}/borrow`, "Should throw an error for invalid email.", async (request) => {
+        const borrower = 'borrower';
+        const response: Response<EquipmentModel> = await request().send({ borrower });
+
+        expect(response.statusCode).toBe(400);
+    });
+
     apiTest.route(`/${equipmentId}/borrow`, "Should throw an error for duplicates.", async (request) => {
-        const borrower = 'Seb';
+        const borrower = 'test@gmail.com';
         const response: Response<EquipmentModel> = await request().send({ borrower });
 
         expect(response.statusCode).toBe(400);
@@ -60,12 +74,25 @@ apiTest.create(() => {
         await apiTest.updateById(COLLECTION, {
             ...equipment, 
             _id: equipment._id, 
-            borrowedBy: ['Seb', 'Fred']
+            borrowedBy: ['borrower@gmail.com', 'borrower2@gmail.com']
         });
 
-        const borrower = 'Fred';
+        const borrower = 'borrower3@gmail.com';
         const response: Response<EquipmentModel> = await request().send({ borrower });
 
         expect(response.statusCode).toBe(400);
+    });
+
+    apiTest.route(`/${equipmentId}/borrow`, "Should properly send a mail.", async (request) => {
+        sendMailMock.mockClear();
+
+        // @ts-ignore
+        createTransport.mockClear();
+
+        const borrower = 'borrower@gmail.com';
+        const response: Response<EquipmentModel> = await request().send({ borrower });
+
+        expect(response.statusCode).toBe(204);
+        expect(sendMailMock).toHaveBeenCalled();
     });
 });
