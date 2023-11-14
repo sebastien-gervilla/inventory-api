@@ -7,6 +7,7 @@
         "deleted": "Successfully deleted equipment",
         "amountExceeded": "Can't borrow more than in stock",
         "duplicateBorrower": "User already borrowed this equipment",
+        "notBorrowed": "User didn't borrow this equipment",
         "borrowed": "Successfully borrowed equipment",
         "unborrowed": "Successfully unborrowed equipment",
 
