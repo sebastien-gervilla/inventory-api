@@ -15,7 +15,12 @@ const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
         trim: true
     },
     borrowedBy: {
-        type: [String],
+        type: [{
+            type: String,
+            maxlength: 320,
+            trim: true,
+            validate: [validateEmail, 'Invalid email.']
+        }],
         required: true,
         default: []
     },
@@ -28,6 +33,10 @@ const EquipmentSchema = new Mongoose.Schema<EquipmentModel>({
 }, {
     timestamps: true
 });
+
+function validateEmail (email: string) {
+    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+}
 
 const Equipment = Mongoose.model<EquipmentModel>("Equipment", EquipmentSchema, "equipments");
 export { Equipment };
