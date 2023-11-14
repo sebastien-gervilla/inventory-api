@@ -9,3 +9,10 @@
 
 # testing
 /coverage
+
+# Database
+/data
+
+# Secrets
+db-password.txt
+db-username.txt
