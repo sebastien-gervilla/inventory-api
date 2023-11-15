@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: .
+      target: production
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+      
+  mongo:
+    container_name: mongo
+    image: mongo
+    restart: always
+    secrets:
+      - db-username
+      - db-password
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: /run/secrets/db-username
+      MONGO_INITDB_ROOT_PASSWORD: /run/secrets/db-password
+    volumes:
+      - ./data:/data/db
+    command: mongod --quiet --logpath /dev/null 
+    
+secrets:
+  db-username:
+    file: ./db-username.txt
+  db-password:
+    file: ./db-password.txt
