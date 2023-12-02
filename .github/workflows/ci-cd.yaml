@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - release
-      - develop
+      - dev
 jobs:
   build:
     runs-on: ubuntu-latest
