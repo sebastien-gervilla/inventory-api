@@ -39,7 +39,8 @@ export const initializeServer = async () => {
     let server: Server | null = null;
     if (nodeEnv !== 'test')
         server = app.listen(port, () => {
-            console.log(`\x1b[33m⚡️ Server is running at http://localhost:${port}\x1b[0m`);
+            if (nodeEnv === 'development')
+                console.log(`\x1b[33m⚡️ Server is running at http://localhost:${port}\x1b[0m`);
         });
 
     return {
