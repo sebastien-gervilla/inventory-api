@@ -27,7 +27,8 @@ export const initializeServer = async () => {
     app.use(cors({
         origin: [
             "http://localhost:3000",
-            "http://vps-cdfcffd0.vps.ovh.net"
+            "http://vps-cdfcffd0.vps.ovh.net",
+            "http://vps-cdfcffd0.vps.ovh.net:3000"
         ],
         credentials: true
     }));
