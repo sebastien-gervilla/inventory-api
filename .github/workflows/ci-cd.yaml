@@ -29,9 +29,6 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /srv/www
+          cd /srv/www/inventory-api
           git pull origin master
-          cd inventory-api
-          sudo npm install
-          sudo npm run build
           sudo docker compose -f docker-compose.yml up --build -d
