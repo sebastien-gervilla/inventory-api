@@ -10,7 +10,7 @@ import { initializeDatabaseConnection } from './config/database';
 import { Server } from './types/server.types';
 
 // Router imports
-import { EquipmentRouter } from './routes';
+import { EquipmentRouter, StudentRouter } from './routes';
 
 export const initializeServer = async () => {
     console.log("===================================================");
@@ -34,6 +34,7 @@ export const initializeServer = async () => {
     }));
 
     // Routes
+    app.use('/student', StudentRouter);
     app.use('/equipment', EquipmentRouter);
 
     // Running server
