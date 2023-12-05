@@ -1,6 +1,6 @@
 {
     "equipment": {
-        "gotAll": "Successfully fetched equipments !!!!!!",
+        "gotAll": "Successfully fetched equipments",
         "gotOne": "Successfully fetched equipment",
         "created": "Successfully created equipment",
         "updated": "Successfully updated equipment",
@@ -12,6 +12,10 @@
         "unborrowed": "Successfully unborrowed equipment",
 
         "notFound": "Equipment not found"
+    },
+    "students": {
+        "gotAll": "Successfully fetched students",
+        "notFound": "Students not found"
     },
     "token": {
         "created": "Successfully created token"
